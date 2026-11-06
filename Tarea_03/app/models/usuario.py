@@ -1,4 +1,6 @@
 from sqlmodel import SQLModel, Field
+#from pydantic import BaseModel, EmailStr, Field
+
 
 class Usuario(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
@@ -8,4 +10,5 @@ class Usuario(SQLModel, table=True):
         unique=True,
         index=True
     )
+    email: str = Field(unique=True, index=True)
     hashed_password:str

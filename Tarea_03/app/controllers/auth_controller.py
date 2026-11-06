@@ -23,7 +23,8 @@ def registrar(data: UsuarioCreate, session: SessionDep):
 
 @router.post("/login", response_model=Token)
 def login(
-    data: UsuarioCreate,
+    #data: UsuarioCreate,
+    data: Annotated[OAuth2PasswordRequestForm, Depends()],
     session: SessionDep
 ):
     usuario = usuario_service.autenticar_usuario(
@@ -35,7 +36,7 @@ def login(
     if usuario is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Usuario o contraseña incorrectos",
+            detail="Usuario o contraseña incorrectos - Loquito! XD",
             headers={"WWW-Authenticate": "Bearer"}
         )
 

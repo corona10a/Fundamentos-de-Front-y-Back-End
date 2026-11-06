@@ -1,7 +1,7 @@
 from sqlmodel import select
 
 from app.models.producto import Producto
-from app.schemas.producto import ProductoCreate
+from app.schemas.producto import ProductoCreate, ProductoUpdate
 
 
 def obtener_productos(user_id: int, session):
@@ -30,5 +30,33 @@ def crear_producto(data: ProductoCreate, user_id: int, session):
     session.add(producto)
     session.commit()
     session.refresh(producto)
+
+    return producto
+
+def actualizar_producto(id_producto: int, data: ProductoUpdate, user_id: int, session):
+    producto = obtener_producto(id_producto, user_id, session)
+
+    if producto is None:
+        return None
+
+    # Solo se actualizan los campos que vienen en el JSON
+    cambios = data.model_dump(exclude_unset=True)
+    producto.sqlmodel_update(cambios)
+
+    session.add(producto)
+    session.commit()
+    session.refresh(producto)
+
+    return producto
+
+
+def eliminar_producto(id_producto: int, user_id: int, session):
+    producto = obtener_producto(id_producto, user_id, session)
+
+    if producto is None:
+        return None
+
+    session.delete(producto)
+    session.commit()
 
     return producto
